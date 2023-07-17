@@ -28,6 +28,12 @@ class HomePage extends StatelessWidget {
               },
               child: Text('Products Page'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                context.goNamed(Routes.singUp);
+              },
+              child: Text('Log Out'),
+            ),
           ],
         ),
       ),

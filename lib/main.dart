@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dicoding_story/bloc/bloc/auth_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'routes/router.dart';
 
@@ -11,9 +13,12 @@ class myApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
+    return BlocProvider<AuthBloc>(
+      create: (context) => AuthBloc()..add(AuthGetCurrentUser()),
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        routerConfig: router,
+      ),
     );
   }
 }

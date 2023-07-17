@@ -17,7 +17,8 @@ class SettingsPage extends StatelessWidget {
             Text('Ini Halaman Setting Page'),
             ElevatedButton(
               onPressed: () {
-                context.goNamed(Routes.home);
+                // context.goNamed(Routes.home);
+                context.goNamed(Routes.singUp);
               },
               child: Text('Back To Home Page'),
             ),
