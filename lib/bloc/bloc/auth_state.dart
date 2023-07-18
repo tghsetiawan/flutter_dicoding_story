@@ -19,10 +19,12 @@ class AuthFailed extends AuthState {
   List<Object> get props => [e];
 }
 
-class AuthSuccess extends AuthState {
-  final String email;
-  const AuthSuccess(this.email);
+class AuthSuccess extends AuthState {}
+
+class AuthSuccessLogin extends AuthState {
+  final ResponseLoginModel data;
+  const AuthSuccessLogin(this.data);
 
   @override
-  List<Object> get props => [email];
+  List<Object> get props => [data];
 }

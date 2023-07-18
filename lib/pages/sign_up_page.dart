@@ -1,28 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dicoding_story/bloc/bloc/auth_bloc.dart';
+import 'package:flutter_dicoding_story/model/register_model.dart';
 import 'package:flutter_dicoding_story/routes/router.dart';
 import 'package:flutter_dicoding_story/theme.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
 class SignUpPage extends StatelessWidget {
   SignUpPage({super.key});
 
   final TextEditingController usernameController =
-      TextEditingController(text: '');
-  final TextEditingController emailController = TextEditingController(text: '');
+      TextEditingController(text: 'test');
+  final TextEditingController emailController =
+      TextEditingController(text: 'test@mail.com');
   final TextEditingController passwordController =
-      TextEditingController(text: '');
+      TextEditingController(text: 'test12345');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create New Account'),
-      ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
+          const SizedBox(
+            height: 100,
+          ),
           Text(
             'Username',
             style: blackTextStyle.copyWith(
@@ -96,8 +99,13 @@ class SignUpPage extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               context.read<AuthBloc>().add(
-                    AuthRegister(usernameController.text, emailController.text,
-                        passwordController.text),
+                    AuthRegister(
+                      RegisterModel(
+                        email: emailController.text,
+                        name: usernameController.text,
+                        password: passwordController.text,
+                      ),
+                    ),
                   );
             },
             style: ElevatedButton.styleFrom(
@@ -108,8 +116,12 @@ class SignUpPage extends StatelessWidget {
             ),
             child: BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
+                print('signup page state $state');
                 if (state is AuthSuccess) {
                   context.goNamed(Routes.home);
+                }
+                if (state is AuthFailed) {
+                  Fluttertoast.showToast(msg: state.e);
                 }
               },
               builder: (context, state) {

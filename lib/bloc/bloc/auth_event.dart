@@ -8,14 +8,21 @@ abstract class AuthEvent extends Equatable {
 }
 
 class AuthRegister extends AuthEvent {
-  final String username;
-  final String email;
-  final String password;
+  final RegisterModel data;
+  const AuthRegister(this.data);
 
-  const AuthRegister(this.username, this.email, this.password);
   @override
-  // TODO: implement props
-  List<Object> get props => [username, email, password];
+  List<Object> get props => [data];
+}
+
+class AuthLogin extends AuthEvent {
+  final LoginModel data;
+  const AuthLogin(this.data);
+
+  @override
+  List<Object> get props => [data];
 }
 
 class AuthGetCurrentUser extends AuthEvent {}
+
+class AuthLogout extends AuthEvent {}

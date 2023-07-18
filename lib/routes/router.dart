@@ -1,40 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dicoding_story/pages/error_page.dart';
+import 'package:flutter_dicoding_story/pages/home_page.dart';
 import 'package:flutter_dicoding_story/pages/sign_in_page.dart';
 import 'package:flutter_dicoding_story/pages/product_detail_page.dart';
 import 'package:flutter_dicoding_story/pages/products_page.dart';
 import 'package:flutter_dicoding_story/pages/settings_page.dart';
 import 'package:flutter_dicoding_story/pages/sign_up_page.dart';
-import 'package:flutter_dicoding_story/services/auth_service.dart';
+import 'package:flutter_dicoding_story/pages/splash_page.dart';
 import 'package:go_router/go_router.dart';
-import '../pages/home_page.dart';
-
 part 'route_name.dart';
-
-bool isLogin = false;
-String? email;
-
-Future<void> validateAuth() async {
-  email = await AuthService().getCredentialFromLocal().toString();
-}
-
-bool getValidateAuth() {
-  validateAuth();
-  print('email : $email');
-  if (email == null || email == '') {
-    isLogin = false;
-  }
-  return isLogin;
-}
 
 /// The route configuration.
 final GoRouter router = GoRouter(
-  initialLocation: getValidateAuth() ? '/' : '/signup',
   errorBuilder: (context, state) => const ErrorPage(),
   routes: <RouteBase>[
-    // Kalau 1 level -> Push Replacement
-    // Kalau Sub level -> Push (Biasa)
-    // Prioritas dalam pembuatan GoRoute (urutan dari atas -> bawah)
     GoRoute(
       path: '/',
       name: Routes.home,
@@ -83,5 +62,13 @@ final GoRouter router = GoRouter(
         return SignInPage();
       },
     ),
+    GoRoute(
+      path: '/splash',
+      name: Routes.splash,
+      builder: (BuildContext context, GoRouterState state) {
+        return const SplashPage();
+      },
+    ),
   ],
+  initialLocation: '/splash',
 );
