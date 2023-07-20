@@ -20,12 +20,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         try {
           emit(AuthLoading());
 
-          final res = await AuthService().register(event.data);
-          print('AuthRegister : $res');
-          if (res == false) {
+          final register = await AuthService().register(event.data);
+
+          if (register == false) {
             emit(const AuthFailed('Email is already taken'));
           } else {
-            emit(AuthSuccess());
+            final LoginModel loginModel = LoginModel(
+                email: event.data.email, password: event.data.password);
+
+            final login = await AuthService().login(loginModel);
+
+            emit(AuthSuccessLogin(login));
           }
         } catch (e) {
           emit(AuthFailed(e.toString()));
@@ -36,9 +41,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         try {
           emit(AuthLoading());
 
-          final res = await AuthService().login(event.data);
+          final login = await AuthService().login(event.data);
 
-          emit(AuthSuccessLogin(res));
+          emit(AuthSuccessLogin(login));
         } catch (e) {
           emit(AuthFailed(e.toString()));
         }

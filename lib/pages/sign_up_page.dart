@@ -117,7 +117,7 @@ class SignUpPage extends StatelessWidget {
             child: BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
                 print('signup page state $state');
-                if (state is AuthSuccess) {
+                if (state is AuthSuccessLogin) {
                   context.goNamed(Routes.home);
                 }
                 if (state is AuthFailed) {

@@ -6,6 +6,7 @@ import 'package:flutter_dicoding_story/model/login_result_model.dart';
 import 'package:flutter_dicoding_story/model/register_model.dart';
 import 'package:flutter_dicoding_story/model/response_login_model.dart';
 import 'package:flutter_dicoding_story/model/response_model.dart';
+import 'package:flutter_dicoding_story/model/story_model.dart';
 import 'package:flutter_dicoding_story/shared_value.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -26,11 +27,7 @@ class AuthService {
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
 
-      // ResponseModel responseModel = jsonDecode(response.body);
-
       if (response.statusCode == 200 || response.statusCode == 201) {
-        await storeCredentialRegisterToLocal(
-            data.email.toString(), data.password.toString());
         return true;
       } else {
         return false;
@@ -60,7 +57,8 @@ class AuthService {
         ResponseLoginModel responseLoginModel =
             ResponseLoginModel.fromJson(jsonDecode(response.body));
 
-        await storeCredentialLoginToLocal(responseLoginModel);
+        await storeCredentialLoginToLocal(responseLoginModel,
+            loginModel.email.toString(), loginModel.password.toString());
 
         return responseLoginModel;
       } else {
@@ -82,9 +80,13 @@ class AuthService {
   }
 
   Future<void> storeCredentialLoginToLocal(
-      ResponseLoginModel responseLoginModel) async {
+      ResponseLoginModel responseLoginModel,
+      String email,
+      String password) async {
     try {
       const storage = FlutterSecureStorage();
+      await storage.write(key: 'email', value: email);
+      await storage.write(key: 'password', value: password);
       await storage.write(
           key: 'userId', value: responseLoginModel.loginResult!.userId);
       await storage.write(
@@ -142,5 +144,40 @@ class AuthService {
   Future<void> clearLocalStorage() async {
     const storage = FlutterSecureStorage();
     await storage.deleteAll();
+  }
+
+  Future<List<StoryModel>> getStory(int page, int size) async {
+    try {
+      print('$baseUrl/stories');
+
+      final token = await AuthService().getToken();
+
+      print(token);
+
+      final res = await http.get(
+          Uri.parse(
+            '$baseUrl/stories?'
+            'page=$page'
+            '&size=$size',
+          ),
+          headers: {
+            'Authorization': token,
+          });
+
+      print('Response status: ${res.statusCode}');
+      print('Response body: ${res.body}');
+
+      if (res.statusCode == 200) {
+        return List<StoryModel>.from(
+          jsonDecode(res.body)['listStory'].map(
+            (story) => StoryModel.fromJson(story),
+          ),
+        ).toList();
+      }
+
+      throw jsonDecode(res.body)['message'];
+    } catch (e) {
+      rethrow;
+    }
   }
 }
