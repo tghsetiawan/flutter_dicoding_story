@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dicoding_story/bloc/bloc/auth_bloc.dart';
+import 'package:flutter_dicoding_story/bloc/Auth/auth_bloc.dart';
 import 'package:flutter_dicoding_story/model/register_model.dart';
 import 'package:flutter_dicoding_story/routes/router.dart';
 import 'package:flutter_dicoding_story/theme.dart';

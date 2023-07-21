@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dicoding_story/model/story_model.dart';
 import 'package:flutter_dicoding_story/pages/error_page.dart';
 import 'package:flutter_dicoding_story/pages/home_page.dart';
 import 'package:flutter_dicoding_story/pages/sign_in_page.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_dicoding_story/pages/products_page.dart';
 import 'package:flutter_dicoding_story/pages/settings_page.dart';
 import 'package:flutter_dicoding_story/pages/sign_up_page.dart';
 import 'package:flutter_dicoding_story/pages/splash_page.dart';
+import 'package:flutter_dicoding_story/pages/stroy_detail_page.dart';
 import 'package:go_router/go_router.dart';
 part 'route_name.dart';
 
@@ -39,6 +41,16 @@ final GoRouter router = GoRouter(
             )
           ],
         ),
+        GoRoute(
+          path: 'story_detail',
+          name: Routes.storyDetail,
+          builder: (BuildContext context, GoRouterState state) {
+            StoryModel storyModel = state.extra as StoryModel;
+            return StoryDetailPage(
+              story: storyModel,
+            );
+          },
+        )
       ],
     ),
     GoRoute(

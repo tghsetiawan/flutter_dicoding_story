@@ -145,39 +145,4 @@ class AuthService {
     const storage = FlutterSecureStorage();
     await storage.deleteAll();
   }
-
-  Future<List<StoryModel>> getStory(int page, int size) async {
-    try {
-      print('$baseUrl/stories');
-
-      final token = await AuthService().getToken();
-
-      print(token);
-
-      final res = await http.get(
-          Uri.parse(
-            '$baseUrl/stories?'
-            'page=$page'
-            '&size=$size',
-          ),
-          headers: {
-            'Authorization': token,
-          });
-
-      print('Response status: ${res.statusCode}');
-      print('Response body: ${res.body}');
-
-      if (res.statusCode == 200) {
-        return List<StoryModel>.from(
-          jsonDecode(res.body)['listStory'].map(
-            (story) => StoryModel.fromJson(story),
-          ),
-        ).toList();
-      }
-
-      throw jsonDecode(res.body)['message'];
-    } catch (e) {
-      rethrow;
-    }
-  }
 }

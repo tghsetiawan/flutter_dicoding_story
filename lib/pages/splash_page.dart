@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dicoding_story/bloc/bloc/auth_bloc.dart';
 import 'package:flutter_dicoding_story/routes/router.dart';
 import 'package:lottie/lottie.dart';
+
+import '../bloc/Auth/auth_bloc.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});

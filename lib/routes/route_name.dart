@@ -9,4 +9,5 @@ abstract class Routes {
   static const singIn = 'signIn';
   static const singUp = 'signUp';
   static const splash = 'splash';
+  static const storyDetail = 'storyDetail';
 }
