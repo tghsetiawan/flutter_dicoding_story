@@ -10,4 +10,5 @@ abstract class Routes {
   static const singUp = 'signUp';
   static const splash = 'splash';
   static const storyDetail = 'storyDetail';
+  static const storyAdd = 'storyAdd';
 }

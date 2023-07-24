@@ -111,8 +111,6 @@ class _HomePageState extends State<HomePage> {
                   transitionDuration: const Duration(milliseconds: 500),
                   itemBuilder: (context, item, index) => GestureDetector(
                     onTap: () {
-                      print(item.id);
-                      print(item.description);
                       context.goNamed(Routes.storyDetail, extra: item);
                     },
                     child: StoryListItem(
@@ -129,7 +127,7 @@ class _HomePageState extends State<HomePage> {
           floatingActionButton: FloatingActionButton(
             elevation: 0,
             onPressed: () {
-              // Add your onPressed code here!
+              context.goNamed(Routes.storyAdd);
             },
             backgroundColor: Colors.orange,
             child: const Icon(

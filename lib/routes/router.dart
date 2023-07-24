@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dicoding_story/model/story_model.dart';
+import 'package:flutter_dicoding_story/pages/create_new_story_page.dart';
 import 'package:flutter_dicoding_story/pages/error_page.dart';
 import 'package:flutter_dicoding_story/pages/home_page.dart';
 import 'package:flutter_dicoding_story/pages/sign_in_page.dart';
@@ -49,6 +50,13 @@ final GoRouter router = GoRouter(
             return StoryDetailPage(
               story: storyModel,
             );
+          },
+        ),
+        GoRoute(
+          path: 'add_story',
+          name: Routes.storyAdd,
+          builder: (BuildContext context, GoRouterState state) {
+            return const CreateNewStoryPage();
           },
         )
       ],
