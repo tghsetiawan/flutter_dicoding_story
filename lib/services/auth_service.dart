@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_dicoding_story/model/auth_model.dart';
 import 'package:flutter_dicoding_story/model/login_model.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_dicoding_story/model/story_model.dart';
 import 'package:flutter_dicoding_story/shared_value.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+// import 'package:dio/dio.dart';
 
 class AuthService {
   Future<bool> register(RegisterModel data) async {
@@ -145,4 +147,26 @@ class AuthService {
     const storage = FlutterSecureStorage();
     await storage.deleteAll();
   }
+
+  // final dio = Dio();
+
+  // Future<bool> registerHis(RegisterModel data) async {
+  //   try {
+
+  //     final bodyRequest = {"email": "HIS.NUTECH@GMAIL.COM", "password": "his"};
+
+  //     final responsee = await dio.post('$baseUrlHis/auth/login',
+  //         data: jsonEncode(bodyRequest),
+  //         options: Options(headers: {'Content-type': 'application/json'}));
+
+  //     print('$baseUrlHis/auth/login');
+  //     print('Response headers: ${responsee.headers}');
+  //     print('Response status: ${responsee.statusCode}');
+  //     print('Response body: ${responsee.data}');
+
+  //   } catch (e) {
+  //     print(e.toString());
+  //     rethrow;
+  //   }
+  // }
 }
