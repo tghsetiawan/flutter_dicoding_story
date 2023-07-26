@@ -1,7 +1,9 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dicoding_story/bloc/Auth/auth_bloc.dart';
 import 'package:flutter_dicoding_story/model/story_model.dart';
+import 'package:flutter_dicoding_story/pages/camera_page.dart';
 import 'package:flutter_dicoding_story/routes/router.dart';
 import 'package:flutter_dicoding_story/services/auth_service.dart';
 import 'package:flutter_dicoding_story/services/story_service.dart';
@@ -75,9 +77,13 @@ class _HomePageState extends State<HomePage> {
                       value: 2,
                       child: Text("Logout"),
                     ),
+                    const PopupMenuItem<int>(
+                      value: 3,
+                      child: Text("Camera"),
+                    ),
                   ];
                 },
-                onSelected: (value) {
+                onSelected: (value) async {
                   if (value == 0) {
                     // print("My account menu is selected.");
                     context.goNamed(Routes.products);
@@ -87,6 +93,16 @@ class _HomePageState extends State<HomePage> {
                   } else if (value == 2) {
                     // print("Logout menu is selected.");
                     context.read<AuthBloc>().add(AuthLogout());
+                  } else if (value == 3) {
+                    // context.goNamed(Routes.camera);
+
+                    // await availableCameras().then((value) => Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (_) => CameraPage(cameras: value))));
+
+                    await availableCameras().then((value) =>
+                        context.goNamed(Routes.camera, extra: value));
                   }
                 },
               )

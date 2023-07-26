@@ -1,5 +1,7 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dicoding_story/model/story_model.dart';
+import 'package:flutter_dicoding_story/pages/camera_page.dart';
 import 'package:flutter_dicoding_story/pages/create_new_story_page.dart';
 import 'package:flutter_dicoding_story/pages/error_page.dart';
 import 'package:flutter_dicoding_story/pages/home_page.dart';
@@ -58,6 +60,19 @@ final GoRouter router = GoRouter(
           builder: (BuildContext context, GoRouterState state) {
             return const CreateNewStoryPage();
           },
+          routes: <RouteBase>[
+            GoRoute(
+              path: 'camera',
+              name: Routes.camera,
+              builder: (BuildContext context, GoRouterState state) {
+                List<CameraDescription> cameraList =
+                    state.extra as List<CameraDescription>;
+                return CameraPage(
+                  cameras: cameraList,
+                );
+              },
+            ),
+          ],
         )
       ],
     ),

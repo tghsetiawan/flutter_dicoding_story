@@ -1,9 +1,13 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dicoding_story/pages/camera_page.dart';
+import 'package:flutter_dicoding_story/routes/router.dart';
 import 'package:flutter_dicoding_story/shared_methods.dart';
 import 'package:flutter_dicoding_story/theme.dart';
 import 'package:flutter_dicoding_story/widgets/Switch.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreateNewStoryPage extends StatefulWidget {
@@ -14,12 +18,37 @@ class CreateNewStoryPage extends StatefulWidget {
 }
 
 class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
+  final descriptionController = TextEditingController(text: '');
+  XFile? selectedImageGallery;
+
+  Future<void> _navigateAndDisplaySelection(BuildContext context) async {
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    // final result = await Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const SelectionScreen()),
+    // );
+
+    final resultImage = await availableCameras().then((value) => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => CameraPage(cameras: value))));
+
+    // When a BuildContext is used from a StatefulWidget, the mounted property
+    // must be checked after an asynchronous gap.
+    if (!mounted) return;
+
+    // After the Selection Screen returns a result, hide any previous snackbars
+    // and show the new result.
+    // ScaffoldMessenger.of(context)
+    //   ..removeCurrentSnackBar()
+    //   ..showSnackBar(SnackBar(content: Text('$result')));
+    setState(() {
+      selectedImageGallery = resultImage;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final descriptionController = TextEditingController(text: '');
-    XFile? selectedImageGallery;
-    XFile? selectedImageGalleryy;
-
     return Scaffold(
       backgroundColor: lightBackgroundColor,
       appBar: AppBar(
@@ -50,46 +79,6 @@ class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    // showModalBottomSheet(
-                    //   shape: const RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.vertical(
-                    //       top: Radius.circular(10),
-                    //     ),
-                    //   ),
-                    //   backgroundColor: Colors.white,
-                    //   context: context,
-                    //   builder: (context) {
-                    //     return Wrap(
-                    //       children: [
-                    //         ListTile(
-                    //           onTap: () async {
-                    //             print('Klik Galery');
-                    //             final image = await selectImage();
-                    //             print(image);
-                    //             setState(() {
-                    //               selectedImageGallery = image;
-                    //             });
-                    //           },
-                    //           leading: const Icon(Icons.image_search_rounded),
-                    //           title: Text(
-                    //             'Add Image from Galery',
-                    //             style: blackTextStyle.copyWith(
-                    //                 fontWeight: semiBold),
-                    //           ),
-                    //         ),
-                    //         ListTile(
-                    //           onTap: () {},
-                    //           leading: const Icon(Icons.photo_camera_outlined),
-                    //           title: Text(
-                    //             'Add Photo from Camera',
-                    //             style: blackTextStyle.copyWith(
-                    //                 fontWeight: semiBold),
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     );
-                    //   },
-                    // );
                     showModalBottomSheet(
                       context: context,
                       backgroundColor: Colors.white,
@@ -104,7 +93,6 @@ class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
                           children: [
                             ListTile(
                               onTap: () async {
-                                print('Klik Galery');
                                 final image = await selectImage();
                                 setState(() {
                                   selectedImageGallery = image;
@@ -118,7 +106,20 @@ class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
                               ),
                             ),
                             ListTile(
-                              onTap: () {},
+                              onTap: () async {
+                                // final image = await availableCameras().then(
+                                //   (value) => context.goNamed(
+                                //     Routes.camera,
+                                //     extra: value,
+                                //   ),
+                                // );
+
+                                // setState(() {
+                                //   selectedImageGallery = image;
+                                // });
+
+                                _navigateAndDisplaySelection(context);
+                              },
                               leading: const Icon(Icons.photo_camera_outlined),
                               title: Text(
                                 'Add Photo from Camera',
@@ -129,20 +130,15 @@ class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
                           ],
                         );
                       },
-                    ).then(
-                      (value) {
-                        setState(() {
-                          selectedImageGalleryy = selectedImageGallery;
-                        });
-                      },
                     );
                   },
                   child: Container(
-                    width: 150,
-                    height: 150,
+                    width: 200,
+                    height: 200,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: lightBackgroundColor,
+                      // image:
                       image: selectedImageGallery == null
                           ? null
                           : DecorationImage(
@@ -163,7 +159,7 @@ class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
                   ),
                 ),
                 const SizedBox(
-                  height: 16,
+                  height: 10,
                 ),
                 Text(
                   'Upload Image',
@@ -171,9 +167,6 @@ class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
                     fontSize: 18,
                     fontWeight: medium,
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
                 ),
               ],
             ),

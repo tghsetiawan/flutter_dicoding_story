@@ -33,7 +33,7 @@ class StoryDetailPage extends StatelessWidget {
                 border: Border.all(width: 2),
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                   image: NetworkImage(story.photoUrl!),
                 ),
               ),
