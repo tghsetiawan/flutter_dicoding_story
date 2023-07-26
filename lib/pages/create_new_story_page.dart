@@ -7,6 +7,8 @@ import 'package:flutter_dicoding_story/routes/router.dart';
 import 'package:flutter_dicoding_story/shared_methods.dart';
 import 'package:flutter_dicoding_story/theme.dart';
 import 'package:flutter_dicoding_story/widgets/Switch.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -19,16 +21,22 @@ class CreateNewStoryPage extends StatefulWidget {
 
 class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
   final descriptionController = TextEditingController(text: '');
+  String? _currentAddress;
+  Position? _currentPosition;
   XFile? selectedImageGallery;
+  bool light = false;
+
+  bool validate() {
+    print(descriptionController.value.text);
+    if (descriptionController.text.isEmpty || selectedImageGallery == null) {
+      return false;
+    }
+    return true;
+  }
 
   Future<void> _navigateAndDisplaySelection(BuildContext context) async {
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
-    // final result = await Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => const SelectionScreen()),
-    // );
-
     final resultImage = await availableCameras().then((value) => Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => CameraPage(cameras: value))));
@@ -39,11 +47,68 @@ class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
 
     // After the Selection Screen returns a result, hide any previous snackbars
     // and show the new result.
-    // ScaffoldMessenger.of(context)
-    //   ..removeCurrentSnackBar()
-    //   ..showSnackBar(SnackBar(content: Text('$result')));
     setState(() {
       selectedImageGallery = resultImage;
+    });
+  }
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+      print('${_currentPosition!.latitude}, ${_currentPosition!.longitude}');
+      _getAddressFromLatLng(_currentPosition!);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(
+            _currentPosition!.latitude, _currentPosition!.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[1];
+
+      setState(() {
+        _currentAddress =
+            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
+      });
+      print(
+          '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}');
+    }).catchError((e) {
+      debugPrint(e);
     });
   }
 
@@ -107,17 +172,6 @@ class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
                             ),
                             ListTile(
                               onTap: () async {
-                                // final image = await availableCameras().then(
-                                //   (value) => context.goNamed(
-                                //     Routes.camera,
-                                //     extra: value,
-                                //   ),
-                                // );
-
-                                // setState(() {
-                                //   selectedImageGallery = image;
-                                // });
-
                                 _navigateAndDisplaySelection(context);
                               },
                               leading: const Icon(Icons.photo_camera_outlined),
@@ -184,9 +238,33 @@ class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
                   fontWeight: semiBold,
                 ),
               ),
-              const SwitchExample(),
+              Switch(
+                // This bool value toggles the switch.
+                value: light,
+                activeColor: Colors.blueAccent,
+                onChanged: (bool value) {
+                  // This is called when the user toggles the switch.
+                  setState(() {
+                    light = value;
+                  });
+                  if (value) {
+                    _getCurrentPosition();
+                  } else {
+                    setState(() {
+                      _currentPosition = null;
+                      _currentAddress = "";
+                    });
+                  }
+                },
+              ),
             ],
           ),
+          const SizedBox(
+            height: 5,
+          ),
+          Text('LAT: ${_currentPosition?.latitude ?? ""}'),
+          Text('LNG: ${_currentPosition?.longitude ?? ""}'),
+          Text('ADDRESS: ${_currentAddress ?? ""}'),
           const SizedBox(
             height: 15,
           ),
@@ -209,7 +287,15 @@ class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
             height: 15,
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              if (validate()) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(content: Text('Oke')));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Ada yang kosong')));
+              }
+            },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(

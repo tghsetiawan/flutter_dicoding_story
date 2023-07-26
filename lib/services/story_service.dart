@@ -39,4 +39,36 @@ class StoryService {
       rethrow;
     }
   }
+
+  Future<void> addStory() async {
+    try {
+      final token = await AuthService().getToken();
+
+      // Map<String, String> headers = <String, String>{'Authorization': token};
+
+      // Map<String, String> requestBody = <String, String>{'field1': value1};
+
+      // var req = http.MultipartRequest('POST', Uri.parse('$baseUrl/stories'))
+      //   ..headers.addAll(requestBody)
+      //   ..fields.addAll(requestBody);
+
+      // var res = await req.send();
+
+      // if (kDebugMode) {
+      //   print('$baseUrl/stories');
+      //   print(token);
+      //   print('Response status: ${res.statusCode}');
+      //   print('Response body: ${res.stream.bytesToString()}');
+      // }
+
+      // final uri = Uri.parse('https://myendpoint.com');
+      // var request = new http.MultipartRequest('POST', uri);
+      // final httpImage = http.MultipartFile.fromBytes('files.myimage', bytes,
+      //     contentType: MediaType.parse(mimeType), filename: 'myImage.png');
+      // request.files.add(httpImage);
+      // final response = await request.send();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

@@ -77,10 +77,6 @@ class _HomePageState extends State<HomePage> {
                       value: 2,
                       child: Text("Logout"),
                     ),
-                    const PopupMenuItem<int>(
-                      value: 3,
-                      child: Text("Camera"),
-                    ),
                   ];
                 },
                 onSelected: (value) async {
@@ -93,16 +89,6 @@ class _HomePageState extends State<HomePage> {
                   } else if (value == 2) {
                     // print("Logout menu is selected.");
                     context.read<AuthBloc>().add(AuthLogout());
-                  } else if (value == 3) {
-                    // context.goNamed(Routes.camera);
-
-                    // await availableCameras().then((value) => Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (_) => CameraPage(cameras: value))));
-
-                    await availableCameras().then((value) =>
-                        context.goNamed(Routes.camera, extra: value));
                   }
                 },
               )
@@ -159,53 +145,4 @@ class _HomePageState extends State<HomePage> {
     _pagingController.dispose();
     super.dispose();
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       title: const Text('Home Page'),
-  //     ),
-  //     body: BlocConsumer<AuthBloc, AuthState>(
-  //       listener: (context, state) {
-  //         if (state is AuthFailed) {
-  //           Fluttertoast.showToast(msg: state.e);
-  //         }
-
-  //         if (state is AuthInitial) {
-  //           context.goNamed(Routes.singIn);
-  //         }
-  //       },
-  //       builder: (context, state) {
-  //         return Center(
-  //           child: Column(
-  //             mainAxisAlignment: MainAxisAlignment.center,
-  //             children: [
-  //               Text('Ini Halaman Home Page'),
-  //               ElevatedButton(
-  //                 onPressed: () {
-  //                   context.goNamed(Routes.settings);
-  //                 },
-  //                 child: Text('Settings Page'),
-  //               ),
-  //               ElevatedButton(
-  //                 onPressed: () {
-  //                   context.goNamed(Routes.products);
-  //                 },
-  //                 child: Text('Products Page'),
-  //               ),
-  //               ElevatedButton(
-  //                 onPressed: () {
-  //                   // context.goNamed(Routes.singUp);
-  //                   context.read<AuthBloc>().add(AuthLogout());
-  //                 },
-  //                 child: Text('Log Out'),
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
 }
