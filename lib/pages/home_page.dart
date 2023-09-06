@@ -1,17 +1,17 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dicoding_story/bloc/Auth/auth_bloc.dart';
 import 'package:flutter_dicoding_story/model/story_model.dart';
-import 'package:flutter_dicoding_story/pages/camera_page.dart';
 import 'package:flutter_dicoding_story/routes/router.dart';
-import 'package:flutter_dicoding_story/services/auth_service.dart';
 import 'package:flutter_dicoding_story/services/story_service.dart';
 import 'package:flutter_dicoding_story/theme.dart';
+import 'package:flutter_dicoding_story/widgets/LoadingOverlay.dart';
 import 'package:flutter_dicoding_story/widgets/StoryListItem.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
+import '../bloc/story/story_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,9 +22,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static const _pageSize = 20;
-
   final PagingController<int, StoryModel> _pagingController =
       PagingController(firstPageKey: 0);
+
+  final LoadingOverlay _loadingOverlay = LoadingOverlay();
 
   @override
   void initState() {
@@ -85,32 +86,50 @@ class _HomePageState extends State<HomePage> {
                 },
                 onSelected: (value) async {
                   if (value == 0) {
-                    // print("My account menu is selected.");
                     context.goNamed(Routes.products);
                   } else if (value == 1) {
-                    // print("Settings menu is selected.");
-                    context.goNamed(Routes.maps);
+                    context.read<StoryBloc>().add(GetStoryLocation());
                   } else if (value == 2) {
-                    // print("Settings menu is selected.");
                     context.goNamed(Routes.settings);
                   } else if (value == 3) {
-                    // print("Logout menu is selected.");
                     context.read<AuthBloc>().add(AuthLogout());
                   }
                 },
               )
             ],
           ),
-          body: BlocListener<AuthBloc, AuthState>(
-            listener: (context, state) {
-              if (state is AuthFailed) {
-                Fluttertoast.showToast(msg: state.e);
-              }
+          body: MultiBlocListener(
+            listeners: [
+              BlocListener<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is AuthFailed) {
+                    Fluttertoast.showToast(msg: state.e);
+                  }
 
-              if (state is AuthInitial) {
-                context.goNamed(Routes.singIn);
-              }
-            },
+                  if (state is AuthInitial) {
+                    context.goNamed(Routes.singIn);
+                  }
+                },
+              ),
+              BlocListener<StoryBloc, StoryState>(
+                listener: (context, state) {
+                  if (state is StoryFailed) {
+                    Fluttertoast.showToast(msg: state.e);
+                  }
+
+                  if (state is StoryLoading) {
+                    _loadingOverlay.show(context);
+                  } else {
+                    _loadingOverlay.hide();
+                  }
+
+                  if (state is StorySuccessGet) {
+                    context.goNamed(Routes.maps);
+                    // print(state.data.listStory!);
+                  }
+                },
+              ),
+            ],
             child: ScrollConfiguration(
               behavior: const ScrollBehavior(),
               child: PagedListView<int, StoryModel>.separated(

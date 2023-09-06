@@ -18,3 +18,5 @@ class AddStory extends StoryEvent {
   @override
   List<Object> get props => [pathImage, description, latitude, longitude];
 }
+
+class GetStoryLocation extends StoryEvent {}

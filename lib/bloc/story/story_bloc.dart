@@ -3,6 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_dicoding_story/services/story_service.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../model/response_getstory_model.dart';
+
 part 'story_event.dart';
 part 'story_state.dart';
 
@@ -13,10 +15,22 @@ class StoryBloc extends Bloc<StoryEvent, StoryState> {
         try {
           emit(StoryLoading());
 
-          final res = await StoryService().addStoryDio(event.pathImage,
-              event.description, event.latitude, event.longitude);
+          await StoryService().addStoryDio(event.pathImage, event.description,
+              event.latitude, event.longitude);
 
           emit(StorySuccess());
+        } catch (e) {
+          emit(StoryFailed(e.toString()));
+        }
+      }
+
+      if (event is GetStoryLocation) {
+        try {
+          emit(StoryLoading());
+
+          final res = await StoryService().getAllStoryWithLocation1(1, 20);
+
+          emit(StorySuccessGet(res));
         } catch (e) {
           emit(StoryFailed(e.toString()));
         }

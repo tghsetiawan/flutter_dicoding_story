@@ -1,14 +1,11 @@
-import 'dart:convert';
-import 'dart:typed_data';
+// import 'dart:convert';
+// import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_dicoding_story/model/auth_model.dart';
 import 'package:flutter_dicoding_story/model/login_model.dart';
 import 'package:flutter_dicoding_story/model/register_model.dart';
 import 'package:flutter_dicoding_story/model/response_login_model.dart';
-import 'package:flutter_dicoding_story/model/response_model.dart';
 import 'package:flutter_dicoding_story/services/auth_service.dart';
 
 part 'auth_event.dart';

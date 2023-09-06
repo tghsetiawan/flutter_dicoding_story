@@ -4,6 +4,7 @@ import 'package:flutter_dicoding_story/bloc/Auth/auth_bloc.dart';
 import 'package:flutter_dicoding_story/model/login_model.dart';
 import 'package:flutter_dicoding_story/routes/router.dart';
 import 'package:flutter_dicoding_story/theme.dart';
+import 'package:flutter_dicoding_story/widgets/LoadingOverlay.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,6 +14,7 @@ class SignInPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController(text: '');
   final TextEditingController passwordController =
       TextEditingController(text: '');
+  final LoadingOverlay _loadingOverlay = LoadingOverlay();
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +92,11 @@ class SignInPage extends StatelessWidget {
               listener: (context, state) {
                 if (state is AuthSuccessLogin) {
                   context.goNamed(Routes.home);
+                }
+                if (state is AuthLoading) {
+                  _loadingOverlay.show(context);
+                } else {
+                  _loadingOverlay.hide();
                 }
                 if (state is AuthFailed) {
                   Fluttertoast.showToast(msg: state.e);

@@ -20,3 +20,11 @@ class StoryFailed extends StoryState {
 }
 
 class StorySuccess extends StoryState {}
+
+class StorySuccessGet extends StoryState {
+  final ResponseGetStory data;
+  const StorySuccessGet(this.data);
+
+  @override
+  List<Object> get props => [data];
+}

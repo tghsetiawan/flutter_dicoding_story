@@ -14,13 +14,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return BlocProvider<AuthBloc>(
-    //   create: (context) => AuthBloc()..add(AuthGetCurrentUser()),
-    //   child: MaterialApp.router(
-    //     debugShowCheckedModeBanner: false,
-    //     routerConfig: router,
-    //   ),
-    // );
     return MultiBlocProvider(
       providers: [
         BlocProvider(
