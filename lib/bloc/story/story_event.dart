@@ -8,9 +8,13 @@ abstract class StoryEvent extends Equatable {
 }
 
 class AddStory extends StoryEvent {
-  final AddStory data;
-  const AddStory(this.data);
+  final XFile pathImage;
+  final String description;
+  final double latitude;
+  final double longitude;
+  const AddStory(
+      this.pathImage, this.description, this.latitude, this.longitude);
 
   @override
-  List<Object> get props => [data];
+  List<Object> get props => [pathImage, description, latitude, longitude];
 }

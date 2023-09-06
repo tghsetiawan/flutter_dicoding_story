@@ -5,6 +5,7 @@ import 'package:flutter_dicoding_story/pages/camera_page.dart';
 import 'package:flutter_dicoding_story/pages/create_new_story_page.dart';
 import 'package:flutter_dicoding_story/pages/error_page.dart';
 import 'package:flutter_dicoding_story/pages/home_page.dart';
+import 'package:flutter_dicoding_story/pages/maps_page.dart';
 import 'package:flutter_dicoding_story/pages/sign_in_page.dart';
 import 'package:flutter_dicoding_story/pages/product_detail_page.dart';
 import 'package:flutter_dicoding_story/pages/products_page.dart';
@@ -45,6 +46,13 @@ final GoRouter router = GoRouter(
           ],
         ),
         GoRoute(
+          path: 'maps',
+          name: Routes.maps,
+          builder: (BuildContext context, GoRouterState state) {
+            return const MapsPage();
+          },
+        ),
+        GoRoute(
           path: 'story_detail',
           name: Routes.storyDetail,
           builder: (BuildContext context, GoRouterState state) {
@@ -54,26 +62,26 @@ final GoRouter router = GoRouter(
             );
           },
         ),
+      ],
+    ),
+    GoRoute(
+      path: '/add_story',
+      name: Routes.storyAdd,
+      builder: (BuildContext context, GoRouterState state) {
+        return const CreateNewStoryPage();
+      },
+      routes: <RouteBase>[
         GoRoute(
-          path: 'add_story',
-          name: Routes.storyAdd,
+          path: 'camera',
+          name: Routes.camera,
           builder: (BuildContext context, GoRouterState state) {
-            return const CreateNewStoryPage();
+            List<CameraDescription> cameraList =
+                state.extra as List<CameraDescription>;
+            return CameraPage(
+              cameras: cameraList,
+            );
           },
-          routes: <RouteBase>[
-            GoRoute(
-              path: 'camera',
-              name: Routes.camera,
-              builder: (BuildContext context, GoRouterState state) {
-                List<CameraDescription> cameraList =
-                    state.extra as List<CameraDescription>;
-                return CameraPage(
-                  cameras: cameraList,
-                );
-              },
-            ),
-          ],
-        )
+        ),
       ],
     ),
     GoRoute(

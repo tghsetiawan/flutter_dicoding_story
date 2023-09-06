@@ -72,8 +72,6 @@ class SignInPage extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // print('klik login');
-              // context.go('/');
               context.read<AuthBloc>().add(
                     AuthLogin(
                       LoginModel(
@@ -90,7 +88,6 @@ class SignInPage extends StatelessWidget {
             ),
             child: BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
-                print('signin page state $state');
                 if (state is AuthSuccessLogin) {
                   context.goNamed(Routes.home);
                 }

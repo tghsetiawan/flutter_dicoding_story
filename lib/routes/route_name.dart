@@ -12,4 +12,5 @@ abstract class Routes {
   static const storyDetail = 'storyDetail';
   static const storyAdd = 'storyAdd';
   static const camera = 'camera';
+  static const maps = 'maps';
 }

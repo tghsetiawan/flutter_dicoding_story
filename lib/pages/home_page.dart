@@ -71,10 +71,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const PopupMenuItem<int>(
                       value: 1,
-                      child: Text("Settings"),
+                      child: Text("Maps"),
                     ),
                     const PopupMenuItem<int>(
                       value: 2,
+                      child: Text("Settings"),
+                    ),
+                    const PopupMenuItem<int>(
+                      value: 3,
                       child: Text("Logout"),
                     ),
                   ];
@@ -85,8 +89,11 @@ class _HomePageState extends State<HomePage> {
                     context.goNamed(Routes.products);
                   } else if (value == 1) {
                     // print("Settings menu is selected.");
-                    context.goNamed(Routes.settings);
+                    context.goNamed(Routes.maps);
                   } else if (value == 2) {
+                    // print("Settings menu is selected.");
+                    context.goNamed(Routes.settings);
+                  } else if (value == 3) {
                     // print("Logout menu is selected.");
                     context.read<AuthBloc>().add(AuthLogout());
                   }

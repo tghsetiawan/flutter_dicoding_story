@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dicoding_story/model/story_model.dart';
 import 'package:flutter_dicoding_story/services/auth_service.dart';
 import 'package:flutter_dicoding_story/shared_value.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class StoryService {
   Future<List<StoryModel>> getAllStory(int page, int size) async {
@@ -12,12 +14,13 @@ class StoryService {
       final token = await AuthService().getToken();
 
       final res = await http.get(
-          Uri.parse(
-            '$baseUrl/stories?page=$page&size=$size',
-          ),
-          headers: {
-            'Authorization': token,
-          });
+        Uri.parse(
+          '$baseUrl/stories?page=$page&size=$size',
+        ),
+        headers: {
+          'Authorization': token,
+        },
+      );
 
       if (kDebugMode) {
         print('$baseUrl/stories?page=$page&size=$size');
@@ -40,33 +43,68 @@ class StoryService {
     }
   }
 
-  Future<void> addStory() async {
+  Future<List<StoryModel>> getAllStoryWithLocation(int page, int size) async {
     try {
       final token = await AuthService().getToken();
 
-      // Map<String, String> headers = <String, String>{'Authorization': token};
+      final res = await http.get(
+        Uri.parse(
+          '$baseUrl/stories?page=$page&size=$size&location=1',
+        ),
+        headers: {
+          'Authorization': token,
+        },
+      );
 
-      // Map<String, String> requestBody = <String, String>{'field1': value1};
+      if (kDebugMode) {
+        print('$baseUrl/stories?page=$page&size=$size&location=1');
+        print(token);
+        print('Response status: ${res.statusCode}');
+        print('Response body: ${res.body}');
+      }
 
-      // var req = http.MultipartRequest('POST', Uri.parse('$baseUrl/stories'))
-      //   ..headers.addAll(requestBody)
-      //   ..fields.addAll(requestBody);
+      if (res.statusCode == 200) {
+        return List<StoryModel>.from(
+          jsonDecode(res.body)['listStory'].map(
+            (story) => StoryModel.fromJson(story),
+          ),
+        ).toList();
+      }
 
-      // var res = await req.send();
+      throw jsonDecode(res.body)['message'];
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-      // if (kDebugMode) {
-      //   print('$baseUrl/stories');
-      //   print(token);
-      //   print('Response status: ${res.statusCode}');
-      //   print('Response body: ${res.stream.bytesToString()}');
-      // }
+  final dio = Dio();
 
-      // final uri = Uri.parse('https://myendpoint.com');
-      // var request = new http.MultipartRequest('POST', uri);
-      // final httpImage = http.MultipartFile.fromBytes('files.myimage', bytes,
-      //     contentType: MediaType.parse(mimeType), filename: 'myImage.png');
-      // request.files.add(httpImage);
-      // final response = await request.send();
+  Future<void> addStoryDio(
+      XFile pathImage, String descripiton, double lat, double lon) async {
+    try {
+      final token = await AuthService().getToken();
+
+      var formData = FormData.fromMap({
+        "description": descripiton,
+        "photo": await MultipartFile.fromFile(pathImage.path),
+        "lat": lat,
+        "lon": lon,
+      });
+
+      final responsee = await dio.post(
+        '$baseUrl/stories',
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': token,
+          },
+        ),
+      );
+
+      print('$baseUrl/stories');
+      print('Response headers: ${responsee.headers}');
+      print('Response status: ${responsee.statusCode}');
+      print('Response body: ${responsee.data}');
     } catch (e) {
       rethrow;
     }

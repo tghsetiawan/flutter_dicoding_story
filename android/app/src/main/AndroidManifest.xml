@@ -2,6 +2,7 @@
     package="com.example.flutter_dicoding_story">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    
    <application
         android:label="flutter_dicoding_story"
         android:name="${applicationName}"
@@ -33,5 +34,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDLR0C7m02vB_u9HvQd8J6pml6yfmytz6I"/>
     </application>
 </manifest>
