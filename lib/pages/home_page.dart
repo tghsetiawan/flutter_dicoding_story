@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                   }
 
                   if (state is StorySuccessGet) {
-                    context.goNamed(Routes.maps);
+                    context.goNamed(Routes.maps, extra: state.data.listStory);
                     // print(state.data.listStory!);
                   }
                 },

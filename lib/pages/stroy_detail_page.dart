@@ -13,7 +13,7 @@ class StoryDetailPage extends StatelessWidget {
         appBar: AppBar(
           elevation: 0,
           title: Text(
-            story!.id.toString(),
+            story.id.toString(),
             style: whiteTextStyle.copyWith(
               fontWeight: semiBold,
             ),

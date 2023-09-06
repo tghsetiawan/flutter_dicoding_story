@@ -1,9 +1,7 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dicoding_story/routes/router.dart';
-import 'package:go_router/go_router.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({Key? key, required this.cameras}) : super(key: key);
