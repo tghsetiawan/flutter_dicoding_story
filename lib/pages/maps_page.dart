@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_dicoding_story/model/response_getstory_model.dart';
 import 'package:flutter_dicoding_story/model/story_model.dart';
+import 'package:flutter_dicoding_story/routes/router.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapsPage extends StatefulWidget {
@@ -50,8 +52,7 @@ class _MapsPageState extends State<MapsPage> {
           ),
           icon: markerIcon,
           onTap: () {
-            print(story.name.toString());
-            print(story.description.toString());
+            context.goNamed(Routes.storyDetail, extra: story);
           });
 
       markers[markerId] = marker;
@@ -62,6 +63,11 @@ class _MapsPageState extends State<MapsPage> {
   Widget build(BuildContext context) {
     LatLng initialLocation = LatLng(listStory[0].lat!, listStory[0].lon!);
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Stories With Location'),
+        elevation: 0,
+        backgroundColor: const Color.fromARGB(255, 15, 44, 16),
+      ),
       body: GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: CameraPosition(

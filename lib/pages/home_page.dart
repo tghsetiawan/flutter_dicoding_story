@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dicoding_story/bloc/Auth/auth_bloc.dart';
+import 'package:flutter_dicoding_story/model/response_getstory_model.dart';
 import 'package:flutter_dicoding_story/model/story_model.dart';
 import 'package:flutter_dicoding_story/routes/router.dart';
 import 'package:flutter_dicoding_story/services/story_service.dart';
@@ -22,7 +23,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static const _pageSize = 20;
-  final PagingController<int, StoryModel> _pagingController =
+  final PagingController<int, ListStory> _pagingController =
       PagingController(firstPageKey: 0);
 
   final LoadingOverlay _loadingOverlay = LoadingOverlay();
@@ -132,9 +133,9 @@ class _HomePageState extends State<HomePage> {
             ],
             child: ScrollConfiguration(
               behavior: const ScrollBehavior(),
-              child: PagedListView<int, StoryModel>.separated(
+              child: PagedListView<int, ListStory>.separated(
                 pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<StoryModel>(
+                builderDelegate: PagedChildBuilderDelegate<ListStory>(
                   animateTransitions: true,
                   transitionDuration: const Duration(milliseconds: 500),
                   itemBuilder: (context, item, index) => GestureDetector(

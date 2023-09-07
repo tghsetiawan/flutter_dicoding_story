@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dicoding_story/model/story_model.dart';
+import 'package:flutter_dicoding_story/model/response_getstory_model.dart';
 import 'package:flutter_dicoding_story/theme.dart';
 
 /// List item representing a single Character with its photo and name.
 class StoryListItem extends StatelessWidget {
-  final StoryModel story;
+  final ListStory story;
 
   const StoryListItem({
     required this.story,

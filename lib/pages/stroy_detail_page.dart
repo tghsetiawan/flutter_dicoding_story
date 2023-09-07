@@ -1,10 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dicoding_story/model/story_model.dart';
+import 'package:flutter_dicoding_story/model/response_getstory_model.dart';
 import 'package:flutter_dicoding_story/theme.dart';
+import 'package:geocoding/geocoding.dart';
 
-class StoryDetailPage extends StatelessWidget {
-  final StoryModel story;
+class StoryDetailPage extends StatefulWidget {
+  final ListStory story;
   const StoryDetailPage({super.key, required this.story});
+
+  @override
+  State<StoryDetailPage> createState() => _StoryDetailPageState();
+}
+
+class _StoryDetailPageState extends State<StoryDetailPage> {
+  String? _currentAddress;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      print('========== Call InitState ==========');
+      _getAddressFromLatLng();
+    });
+  }
+
+  Future<void> _getAddressFromLatLng() async {
+    await placemarkFromCoordinates(widget.story.lat!, widget.story.lon!)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[1];
+
+      setState(() {
+        _currentAddress =
+            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
+      });
+      print(
+          '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}');
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +46,7 @@ class StoryDetailPage extends StatelessWidget {
         appBar: AppBar(
           elevation: 0,
           title: Text(
-            story.id.toString(),
+            widget.story.id.toString(),
             style: whiteTextStyle.copyWith(
               fontWeight: semiBold,
             ),
@@ -34,7 +67,7 @@ class StoryDetailPage extends StatelessWidget {
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: NetworkImage(story.photoUrl!),
+                  image: NetworkImage(widget.story.photoUrl!),
                 ),
               ),
             ),
@@ -42,31 +75,63 @@ class StoryDetailPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  story.name.toString(),
+                  "Username",
                   style: blackTextStyle.copyWith(
-                    fontWeight: semiBold,
-                    fontSize: 18,
+                    fontSize: 15,
                   ),
                 ),
-                const SizedBox(
-                  height: 15,
+                Text(
+                  widget.story.name.toString(),
+                  style: blackTextStyle.copyWith(
+                    fontWeight: semiBold,
+                    fontSize: 20,
+                    height: 1,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "Description",
+                  style: blackTextStyle.copyWith(
+                    fontSize: 15,
+                  ),
                 ),
                 Text(
-                  story.description.toString(),
+                  widget.story.description.toString(),
                   textAlign: TextAlign.justify,
                   style: blackTextStyle.copyWith(
                     fontWeight: semiBold,
-                    fontSize: 18,
+                    fontSize: 20,
+                    height: 1,
                   ),
                 ),
-                const SizedBox(
-                  height: 15,
+                const SizedBox(height: 10),
+                Text(
+                  "Location",
+                  style: blackTextStyle.copyWith(
+                    fontSize: 15,
+                  ),
                 ),
                 Text(
-                  story.createdAt.toString(),
+                  _currentAddress.toString(),
                   style: blackTextStyle.copyWith(
                     fontWeight: semiBold,
                     fontSize: 18,
+                    height: 1,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "Created At",
+                  style: blackTextStyle.copyWith(
+                    fontSize: 15,
+                  ),
+                ),
+                Text(
+                  widget.story.createdAt.toString(),
+                  style: blackTextStyle.copyWith(
+                    fontWeight: semiBold,
+                    fontSize: 18,
+                    height: 1.1,
                   ),
                 ),
                 const SizedBox(

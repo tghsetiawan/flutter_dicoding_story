@@ -60,7 +60,7 @@ final GoRouter router = GoRouter(
           path: 'story_detail',
           name: Routes.storyDetail,
           builder: (BuildContext context, GoRouterState state) {
-            StoryModel storyModel = state.extra as StoryModel;
+            ListStory storyModel = state.extra as ListStory;
             return StoryDetailPage(
               story: storyModel,
             );

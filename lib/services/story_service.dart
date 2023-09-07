@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 class StoryService {
-  Future<List<StoryModel>> getAllStory(int page, int size) async {
+  Future<List<ListStory>> getAllStory(int page, int size) async {
     try {
       final token = await AuthService().getToken();
 
@@ -31,9 +31,9 @@ class StoryService {
       }
 
       if (res.statusCode == 200) {
-        return List<StoryModel>.from(
+        return List<ListStory>.from(
           jsonDecode(res.body)['listStory'].map(
-            (story) => StoryModel.fromJson(story),
+            (story) => ListStory.fromJson(story),
           ),
         ).toList();
       }

@@ -39,6 +39,12 @@ class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
     super.dispose();
   }
 
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    // print("BACK BUTTON!"); // Do some stuff.
+    context.goNamed(Routes.home);
+    return true;
+  }
+
   bool validate() {
     if (descriptionController.text.isEmpty || selectedImageGallery == null) {
       return false;
@@ -122,12 +128,6 @@ class _CreateNewStoryPageState extends State<CreateNewStoryPage> {
     }).catchError((e) {
       debugPrint(e);
     });
-  }
-
-  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    // print("BACK BUTTON!"); // Do some stuff.
-    context.goNamed(Routes.home);
-    return true;
   }
 
   @override
